@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const BEST_SCORE_KEY = "best-score";
+
 export function useBestScore() {
   const [bestScore, setBestScore] = useState(0);
 
   useEffect(() => {
     const getBestScore = async () => {
       try {
-        const score = await AsyncStorage.getItem("bestScore");
+        const score = await AsyncStorage.getItem(BEST_SCORE_KEY);
 
         if (score) {
           try {
@@ -27,7 +29,7 @@ export function useBestScore() {
   useEffect(() => {
     const storeBestScore = async () => {
       try {
-        await AsyncStorage.setItem("bestScore", String(bestScore));
+        await AsyncStorage.setItem(BEST_SCORE_KEY, String(bestScore));
       } catch (err) {
         console.log(err);
       }
