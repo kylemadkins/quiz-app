@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import LottieView from "lottie-react-native";
 
 import { QuestionCard } from "../components/QuestionCard";
 import { Button } from "../components/ui/Button";
@@ -18,9 +19,18 @@ export default function QuizScreen() {
   } = useQuizContext();
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.container}>
+    <View style={styles.screenContainer}>
+      {gameOver ? (
+        <LottieView
+          source={require("../assets/party.json")}
+          style={StyleSheet.absoluteFill}
+          autoPlay
+        />
+      ) : (
+        ""
+      )}
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.quizContainer}>
           <Text style={styles.title}>
             Question {currentQuestionIndex + 1}/{questions.length}
           </Text>
@@ -51,21 +61,22 @@ export default function QuizScreen() {
           )}
 
           <StatusBar style="auto" />
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  screenContainer: {
     flex: 1,
     backgroundColor: "#fdfef4",
   },
-  container: {
+  quizContainer: {
     flex: 1,
     justifyContent: "space-between",
     padding: 20,
+    zIndex: 10,
   },
   title: {
     textAlign: "center",

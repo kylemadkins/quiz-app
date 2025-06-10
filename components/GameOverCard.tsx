@@ -7,7 +7,7 @@ export function GameOverCard() {
   const { score, questions, bestScore } = useQuizContext();
 
   return (
-    <Card title="Well Done!">
+    <Card title="Finished!">
       <Text>
         Correct answers: {score}/{questions.length}
       </Text>
