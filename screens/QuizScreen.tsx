@@ -8,8 +8,14 @@ import { useQuizContext } from "../context/QuizContext";
 import { GameOverCard } from "../components/GameOverCard";
 
 export default function QuizScreen() {
-  const { currentQuestionIndex, questions, onNext, gameOver, restart } =
-    useQuizContext();
+  const {
+    currentQuestionIndex,
+    questions,
+    onNext,
+    gameOver,
+    restart,
+    secondsLeft,
+  } = useQuizContext();
 
   return (
     <SafeAreaProvider>
@@ -23,7 +29,7 @@ export default function QuizScreen() {
             <>
               <View>
                 <QuestionCard question={questions[currentQuestionIndex]} />
-                <Text style={styles.timer}>20 sec</Text>
+                <Text style={styles.timer}>{secondsLeft} sec</Text>
               </View>
               <Button
                 text="Next"

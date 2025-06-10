@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export function Card({
