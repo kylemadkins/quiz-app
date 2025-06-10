@@ -4,13 +4,14 @@ import { Card } from "./ui/Card";
 import { useQuizContext } from "../context/QuizContext";
 
 export function GameOverCard() {
-  const { score, questions } = useQuizContext();
+  const { score, questions, bestScore } = useQuizContext();
 
   return (
     <Card title="Well Done!">
       <Text>
         Correct answers: {score}/{questions.length}
       </Text>
+      <Text>Best score: {bestScore}</Text>
     </Card>
   );
 }

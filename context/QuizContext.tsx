@@ -12,6 +12,7 @@ import {
 import questions from "../data/questions";
 import { Question } from "../types/question";
 import { useTimer } from "../hooks/useTimer";
+import { useBestScore } from "../hooks/useBestScore";
 
 type IQuizContext = {
   questions: Question[];
@@ -23,6 +24,7 @@ type IQuizContext = {
   gameOver: boolean;
   restart: () => void;
   secondsLeft: number;
+  bestScore: number;
 };
 
 const QuizContext = createContext<IQuizContext>({
@@ -35,6 +37,7 @@ const QuizContext = createContext<IQuizContext>({
   gameOver: false,
   restart: () => {},
   secondsLeft: 20,
+  bestScore: 0,
 });
 
 export function QuizProvider({ children }: PropsWithChildren) {
@@ -42,7 +45,9 @@ export function QuizProvider({ children }: PropsWithChildren) {
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+
   const { secondsLeft, clearTimer, restartTimer } = useTimer(20);
+  const { bestScore, setBestScore } = useBestScore();
 
   const onNext = useCallback(() => {
     if (selectedAnswer === questions[currentQuestionIndex].correctAnswer) {
@@ -70,6 +75,10 @@ export function QuizProvider({ children }: PropsWithChildren) {
     if (secondsLeft <= 0) onNext();
   }, [secondsLeft, onNext]);
 
+  useEffect(() => {
+    if (score > bestScore) setBestScore(score);
+  }, [score, bestScore, setBestScore]);
+
   return (
     <QuizContext.Provider
       value={{
@@ -82,6 +91,7 @@ export function QuizProvider({ children }: PropsWithChildren) {
         gameOver,
         restart,
         secondsLeft,
+        bestScore,
       }}
     >
       {children}
