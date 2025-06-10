@@ -6,12 +6,12 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 
 import questions from "../data/questions";
 import { Question } from "../types/question";
+import { useTimer } from "../hooks/useTimer";
 
 type IQuizContext = {
   questions: Question[];
@@ -42,8 +42,7 @@ export function QuizProvider({ children }: PropsWithChildren) {
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(20);
-  const intervalId = useRef<ReturnType<typeof setInterval>>(null);
+  const { secondsLeft, clearTimer, restartTimer } = useTimer(20);
 
   const onNext = useCallback(() => {
     if (selectedAnswer === questions[currentQuestionIndex].correctAnswer) {
@@ -52,38 +51,20 @@ export function QuizProvider({ children }: PropsWithChildren) {
 
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((curr) => curr + 1);
+      restartTimer();
     } else {
       setGameOver(true);
-      if (intervalId.current !== null) clearInterval(intervalId.current);
-      intervalId.current = null;
+      clearTimer();
     }
-
-    setSecondsLeft(20);
-  }, [selectedAnswer, currentQuestionIndex]);
+  }, [selectedAnswer, currentQuestionIndex, clearTimer, restartTimer]);
 
   const restart = () => {
     setCurrentQuestionIndex(0);
     setSelectedAnswer("");
     setScore(0);
-    setSecondsLeft(20);
     setGameOver(false);
-    intervalId.current = setInterval(
-      () => setSecondsLeft((curr) => curr - 1),
-      1000
-    );
+    restartTimer();
   };
-
-  useEffect(() => {
-    intervalId.current = setInterval(
-      () => setSecondsLeft((curr) => curr - 1),
-      1000
-    );
-
-    return () => {
-      if (intervalId.current !== null) clearInterval(intervalId.current);
-      intervalId.current = null;
-    };
-  }, []);
 
   useEffect(() => {
     if (secondsLeft <= 0) onNext();
