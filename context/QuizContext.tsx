@@ -12,7 +12,6 @@ import {
 
 import questions from "../data/questions";
 import { Question } from "../types/question";
-import { Text } from "react-native";
 
 type IQuizContext = {
   questions: Question[];
